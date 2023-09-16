@@ -15,7 +15,7 @@ And user clicks on Signup/login button form top header section
 When user redirected to login page with title as "Automation Exercise - Signup / Login"
 And url for the login page contains "login" as keyword
 And user able to see "Login to your account" section on login page
-And user enters valid registered email id as "gebat52405@vikinoko.comm"
+And user enters valid registered email id as "gebat52405@vikinoko.com"
 And user enters valid password as "123@Abc"
 And click on login button
 Then after login user able to see "Logout" button at top header of application
