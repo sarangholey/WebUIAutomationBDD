@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.qa.automation.core.WebDriverFactory;
 import com.qa.automation.pageobjects.LandingPageObjects;
+import com.qa.automation.pageobjects.ProductsPageObjects;
 import com.qa.automation.pageobjects.SignUpLoginPageObjets;
 
 import io.cucumber.java.After;
@@ -37,6 +38,7 @@ public class StepDef {
 	
 	LandingPageObjects landingPageObjects;
 	SignUpLoginPageObjets signUpLoginPageObjets;
+	ProductsPageObjects productsPageObjects;
 	
 	@Before
 	public void setUp(Scenario scn) throws Exception
@@ -47,6 +49,7 @@ public class StepDef {
 		wait = new WebDriverWait(driver, implictlyWaitTimeoutSec);
 		landingPageObjects = new LandingPageObjects(driver);
 		signUpLoginPageObjets = new SignUpLoginPageObjets(driver);
+		productsPageObjects = new ProductsPageObjects(driver);
 	}
 	
 	@After(order=1)
@@ -130,58 +133,41 @@ public class StepDef {
 	
 	@When("user header over to products page")
 	public void user_header_over_to_products_page() {
-		driver.navigate().to(baseUrl+"/products");
+		String prodPageUrl = productsPageObjects.productsPageUrl();
+		driver.navigate().to(baseUrl+prodPageUrl);
 	}
 
 	@When("user redirected to products page with title as {string}")
 	public void user_redirected_to_products_page_with_title_as(String pageTitle) {
-	    wait.until(ExpectedConditions.titleContains(pageTitle));
-	    Assert.assertEquals(pageTitle, driver.getTitle());
+		productsPageObjects.validateProdPageTitle(pageTitle);
 	}
 	@When("url for the login page contains the {string} as keyword")
 	public void url_for_the_login_page_contains_the_as_keyword(String keywordInUrl) {
-		wait.until(ExpectedConditions.urlContains(keywordInUrl));
-		Assert.assertEquals(true, driver.getCurrentUrl().contains(keywordInUrl));   
+		productsPageObjects.validateProdPageUrlKeyword(keywordInUrl);
 	}
 	@When("user search for a product {string}")
 	public void user_search_for_a_product(String productName) {
-		WebElement productSearchBoxEle = driver.findElement(By.xpath("//input[@id='search_product']"));
-		productSearchBoxEle.sendKeys(productName);
+		productsPageObjects.searchForProduct(productName);
 	}
 	
 	@When("click on search button")
 	public void click_on_search_button() {
-		WebElement productSearchBtnEle = driver.findElement(By.xpath("//button[@id='submit_search']"));
-		productSearchBtnEle.click();
+		productsPageObjects.clickOnProdSearchButton();
 	}
 
 	@Then("from the product list the first product contain the {string} as keyword")
 	public void from_the_product_list_the_first_product_contain_the_as_keyword(String productNameKeyowrd) {
-	   List<WebElement> searchedProdListEle = driver.findElements(By.xpath("//div[@class='features_items']//div[@class='productinfo text-center']/p"));
-	   Assert.assertEquals(true, searchedProdListEle.get(0).getText().contains(productNameKeyowrd));
+		productsPageObjects.valProdListFirstProdName(productNameKeyowrd);
 	}
 	
 	@When("user is able to see {string} header")
 	public void user_is_able_to_see_header(String categoryStringValue) {
-		WebElement categoryStringEle = driver.findElement(By.xpath("//h2[text()='Category']"));
-		Assert.assertEquals(categoryStringValue, categoryStringEle.getText());
+		landingPageObjects.validateCategoryHeader(categoryStringValue);
 	}
 	
 	@Then("under Category below list is displayed")
 	public void under_Category_below_list_is_displayed(List<String> brandCategoryNameList) {
-	    // Write code here that turns the phrase above into concrete actions
-	    // For automatic transformation, change DataTable to one of
-	    // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-	    // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-	    // Double, Byte, Short, Long, BigInteger or BigDecimal.
-	    //
-	    // For other transformations you can register a DataTableType.
-	    List<String> expectedbrandCategoryList = brandCategoryNameList;
-	    List<WebElement> actBrandCategoryListEle = driver.findElements(By.xpath("//div[@id='accordian']//div[@class='panel-heading']//a"));
-	    for (int i = 0; i < expectedbrandCategoryList.size(); i++) {
-	    	//System.out.println(actBrandCategoryListEle.get(i).getText());
-	    	Assert.assertEquals(expectedbrandCategoryList.get(i), actBrandCategoryListEle.get(i).getText());
-		}
+		landingPageObjects.validateCategoryList(brandCategoryNameList);
 	}
 	
 }

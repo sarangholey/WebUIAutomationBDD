@@ -1,5 +1,7 @@
 package com.qa.automation.pageobjects;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -30,6 +32,8 @@ public class LandingPageObjects {
     private By logoutButton = By.xpath("//a[text()=' Logout']");
     private By deleteAccButton = By.xpath("//a[text()=' Delete Account']");
     private By loggedInUserNameTxt = By.xpath("//a[text()= ' Logged in as ']/b");
+    private By categoryString = By.xpath("//h2[text()='Category']");
+    private By actBrandCategoryList = By.xpath("//div[@id='accordian']//div[@class='panel-heading']//a");
     
     
     // Page Methods
@@ -61,6 +65,22 @@ public class LandingPageObjects {
     {
 		WebElement loggedInUserNameTxtEle = driver.findElement(loggedInUserNameTxt);
 		Assert.assertEquals(loggedInUserName, loggedInUserNameTxtEle.getText().trim());
+    }
+    
+    public void validateCategoryHeader(String categoryStringValue)
+    {
+		WebElement categoryStringEle = driver.findElement(categoryString);
+		Assert.assertEquals(categoryStringValue, categoryStringEle.getText());
+    }
+    
+    public void validateCategoryList(List<String> brandCategoryNameList)
+    {
+	    List<String> expectedbrandCategoryList = brandCategoryNameList;
+	    List<WebElement> actBrandCategoryListEle = driver.findElements(actBrandCategoryList);
+	    for (int i = 0; i < expectedbrandCategoryList.size(); i++) {
+	    	//System.out.println(actBrandCategoryListEle.get(i).getText());
+	    	Assert.assertEquals(expectedbrandCategoryList.get(i), actBrandCategoryListEle.get(i).getText());
+		}
     }
     
 
